@@ -1,66 +1,20 @@
-# AI Agents For Developers
+# ai-agents-for-developers
 
-Learn the basics of AI agents in about 30 minutes by building a tiny agent harness from scratch.
+## What are we going to build?
 
-This repo is intentionally minimal and practical. The goal is to understand the core loop, not hide it behind frameworks.
+We'll build an agent that can use bash and can evaluate your code base. It'll be the bare minimum, because we want to do it for the learning purpose.
 
-## What You Will Build
+The whole thing is going to be <300 lines of code.
 
-You will build a simple agent that:
-- Calls an LLM
-- Runs in a loop
-- Gradually evolves toward using tools (like bash/codebase evaluation)
+You'll see that Agent is a very simple concept.
 
-The whole project is designed to stay small and readable (well under a few hundred lines).
+## package.json
 
-## 30-Minute Path
-
-1. `Step 1`: Make one OpenAI call.
-2. `Step 2`: Introduce an agentic loop scaffold.
-3. `Step 3`: Build a working agent (planned).
-4. `Step 4`: Add tools (planned).
-
-## Project Setup
-
-### 1) Install dependencies
-
-```bash
-npm install
-```
-
-Dependencies used:
-- `openai`
-- `dotenv`
-- `tsx`
-
-### 2) Add your API key
-
-Create a `.env` file:
-
-```bash
-OPENAI_API_KEY=your_key_here
-```
-
-### 3) Run each step
-
-```bash
-npm run step1
-npm run step2
-```
-
-You can also run files directly:
-
-```bash
-npx tsx src/step1.ts
-npx tsx src/step2.ts
-```
-
-## Scripts
-
-Current scripts in `package.json`:
+Add those lines to package.json:
 
 ```json
 "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
   "step1": "npx tsx src/step1.ts",
   "step2": "npx tsx src/step2.ts",
   "step3": "npx tsx src/step3.ts",
@@ -68,21 +22,37 @@ Current scripts in `package.json`:
 }
 ```
 
-`step3` and `step4` are part of the learning roadmap and will be added in follow-up commits.
+## How to run code
 
-## Why This Repo
+Now to run the code, you can just say `npm run step1` or `npm run step2`.
 
-Most agent tutorials jump straight to abstractions. This one does the opposite:
-- small files
-- obvious control flow
-- easy to debug
-- easy to extend
+Or you can just run TypeScript directly: `npx tsx src/step1.ts`.
 
-If you are new to agents, this should help you understand the fundamentals quickly.
+## API Keys
 
-## Contributing
+We'll use OpenAI SDK to make callouts to their LLM. You can use Claude as well. They are all the same in a lot of senses.
 
-Issues and PRs are welcome, especially if you want to:
-- improve the teaching flow
-- add step-by-step tests
-- add `step3` and `step4` implementations
+For this you need to get your API key from the platform and add it into the `.env` file:
+
+```bash
+OPENAI_API_KEY=your_key_here
+```
+
+## npm packages
+
+We'll use following packages:
+
+```bash
+npm install openai dotenv tsx
+```
+
+It's an easy one-liner.
+
+## Ready?
+
+We'll slowly build the agent towards simple working agent.
+
+Step 1 = Simple OpenAI callout.
+Step 2 = Agentic Loop.
+Step 3 = Working Agent.
+Step 4 = Agent with tools.
