@@ -1,0 +1,25 @@
+{
+  "name": "basics_ai_agents",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "step1": "npx tsx src/step1.ts",
+    "step2": "npx tsx src/step2.ts",
+    "step3": "npx tsx src/step3.ts",
+    "step4": "npx tsx src/step4.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "openai": "^6.25.0",
+    "tsx": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3"
+  }
+}
