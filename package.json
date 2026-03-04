@@ -8,7 +8,8 @@
     "step1": "npx tsx src/step1.ts",
     "step2": "npx tsx src/step2.ts",
     "step3": "npx tsx src/step3.ts",
-    "step4": "npx tsx src/step4.ts"
+    "step4": "npx tsx src/step4.ts",
+    "step5": "npx tsx src/step5.ts"
   },
   "keywords": [],
   "author": "",
