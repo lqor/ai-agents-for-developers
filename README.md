@@ -53,6 +53,6 @@ It's an easy one-liner.
 We'll slowly build the agent towards simple working agent.
 
 Step 1 = Simple OpenAI callout.
-Step 2 = Agentic Loop.
-Step 3 = Working Agent.
-Step 4 = Agent with tools.
+Step 2 = Agentic Loop and a simple ChatBot.
+Step 3 = Agentic Loop and tools.
+Step 4 = Working Agent.
