@@ -10,7 +10,15 @@
     "step3": "npx tsx src/step3.ts",
     "step4": "npx tsx src/step4.ts",
     "step5": "npx tsx src/step5.ts",
-    "sf:org": "npx tsx src/salesforce-org-lookup.ts"
+    "sf:org": "npx tsx src/salesforce-org-lookup.ts",
+    "get-started": "cd src/Workflows/0-setup && npx tsx get-started.ts",
+    "chain": "cd src/Workflows/1-prompt-chaining && npx tsx chain.ts",
+    "router-simple": "cd src/Workflows/2-routing && npx tsx router-simple.ts",
+    "router": "cd src/Workflows/2-routing && npx tsx router.ts",
+    "sectioning": "cd src/Workflows/3-parallelization && npx tsx sectioning.ts",
+    "voting": "cd src/Workflows/3-parallelization && npx tsx voting.ts",
+    "orchestrator": "cd src/Workflows/4-orchestration-workers && npx tsx orchestrator.ts",
+    "evaluation": "cd src/Workflows/5-evaluation && npx tsx evaluation.ts"
   },
   "keywords": [],
   "author": "",
