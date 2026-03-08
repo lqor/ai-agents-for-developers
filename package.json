@@ -9,7 +9,8 @@
     "step2": "npx tsx src/step2.ts",
     "step3": "npx tsx src/step3.ts",
     "step4": "npx tsx src/step4.ts",
-    "step5": "npx tsx src/step5.ts"
+    "step5": "npx tsx src/step5.ts",
+    "sf:org": "npx tsx src/salesforce-org-lookup.ts"
   },
   "keywords": [],
   "author": "",

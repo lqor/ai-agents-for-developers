@@ -1,6 +1,6 @@
 import "dotenv/config";
-import readline from "readline";
 import OpenAI from "openai";
+import readline from "readline";
 import { execSync } from "child_process";
 
 const client = new OpenAI();
@@ -13,19 +13,21 @@ const readLine = readline.createInterface({
 const tools = [
     {
         name: "do_bash",
-        description: "Execute bash commands on the server",
+        description: "Execute a bash command and return the output",
         type: "function" as const,
         strict: true,
         parameters: {
             type: "object",
             properties: {
-                command: { type: "string" },
+                command: { type: "string"}
             },
             required: ["command"],
-            additionalProperties: false,
+            additionalProperties: false
         }
     }
-]
+];
+
+// {"ls -la"}
 
 let previousResponseId: string | undefined;
 
@@ -40,7 +42,7 @@ function executeBash(command: string): string {
 while(true) {
     const input = await ask("You: ");
 
-    if (input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
+    if(input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
         console.log("Exiting...");
         break;
     }
@@ -54,9 +56,9 @@ while(true) {
 
     const toolCall = response.output.find((item) => item.type === "function_call");
 
-    if (toolCall) {
+    if(toolCall) {
         const args = JSON.parse(toolCall.arguments);
-        console.log("⚡ Running: " + args.command);
+        console.log("Executing command: " + args.command);
         console.log(executeBash(args.command));
     } else {
         console.log("AI: " + response.output_text);

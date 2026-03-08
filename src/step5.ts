@@ -2,6 +2,8 @@ import "dotenv/config";
 import readline from "readline";
 import OpenAI from "openai";
 import { execSync } from "child_process";
+import fs from "fs";
+import path from "path";
 
 const client = new OpenAI();
 const readLine = readline.createInterface({
@@ -24,7 +26,47 @@ const tools = [
       additionalProperties: false,
     },
   },
+  {
+    name: "read_file",
+    description: "Read a UTF-8 text file from disk. Supports optional byte offset/length for partial reads.",
+    type: "function" as const,
+    strict: true,
+    parameters: {
+      type: "object",
+      properties: {
+        file_path: { type: "string", description: "Path to file, relative to the project root or absolute." },
+        offset: { type: "integer", description: "Optional byte offset to start reading from.", minimum: 0 },
+        length: { type: "integer", description: "Optional max number of bytes to read.", minimum: 0 },
+      },
+      required: ["file_path"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "write_file",
+    description: "Write a UTF-8 text file to disk (overwrites by default). Creates parent directories if needed.",
+    type: "function" as const,
+    strict: true,
+    parameters: {
+      type: "object",
+      properties: {
+        file_path: { type: "string", description: "Path to file, relative to the project root or absolute." },
+        content: { type: "string", description: "UTF-8 content to write." },
+        append: { type: "boolean", description: "If true, append instead of overwrite.", default: false },
+      },
+      required: ["file_path", "content"],
+      additionalProperties: false,
+    },
+  },
 ];
+
+const instructions =
+  "You are a self-improving AI agent built in TypeScript. " +
+  "Your own source code is at src/step5.ts — that file contains your tool definitions, " +
+  "your executor function, and your main loop. " +
+  "You can read files with cat and write files with bash commands. " +
+  "You ARE allowed to modify your own source code. " +
+  "When you modify yourself, the changes take effect after a restart.";
 
 let previousResponseId: string | undefined;
 
@@ -40,6 +82,37 @@ function executeBash(command: string): string {
   }
 }
 
+function resolveUserPath(filePath: string): string {
+  return path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
+}
+
+function readFileUtf8(filePath: string, offset?: number, length?: number): string {
+  try {
+    const abs = resolveUserPath(filePath);
+    const buf = fs.readFileSync(abs);
+    const start = offset ?? 0;
+    const end = length != null ? start + length : buf.length;
+    if (start < 0 || end < 0 || start > buf.length) {
+      return `ERROR: Invalid offset/length for file of  bytes.`;
+    }
+    return buf.subarray(start, Math.min(end, buf.length)).toString("utf-8");
+  } catch (error: any) {
+    return "ERROR: " + (error.message || String(error));
+  }
+}
+
+function writeFileUtf8(filePath: string, content: string, append = false): string {
+  try {
+    const abs = resolveUserPath(filePath);
+    fs.mkdirSync(path.dirname(abs), { recursive: true });
+    if (append) fs.appendFileSync(abs, content, { encoding: "utf-8" });
+    else fs.writeFileSync(abs, content, { encoding: "utf-8" });
+    return "OK";
+  } catch (error: any) {
+    return "ERROR: " + (error.message || String(error));
+  }
+}
+
 while (true) {
   const input = await ask("You: ");
   if (input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
@@ -49,11 +122,7 @@ while (true) {
 
   let response = await client.responses.create({
     model: "gpt-5.2",
-    instructions:
-      "You are an AI agent. Your own source code is at src/step5.ts. " +
-      "You can read and modify your own code to add new capabilities. " +
-      "Only modify files inside the current project directory. " +
-      "Never run destructive commands outside this folder.",
+    instructions,
     input: input,
     tools,
     previous_response_id: previousResponseId,
@@ -62,13 +131,23 @@ while (true) {
   while (true) {
     const toolCall = response.output.find((item) => item.type === "function_call");
     if (!toolCall) break;
-
     const args = JSON.parse(toolCall.arguments);
-    console.log("⚡ Running: " + args.command);
-    const result = executeBash(args.command);
+    let result = "ERROR: Unknown tool";
+
+    if (toolCall.name === "do_bash") {
+      console.log("⚡ Running: " + args.command);
+      result = executeBash(args.command);
+    } else if (toolCall.name === "read_file") {
+      console.log("⚡ Reading: " + args.file_path);
+      result = readFileUtf8(args.file_path, args.offset, args.length);
+    } else if (toolCall.name === "write_file") {
+      console.log("⚡ Writing: " + args.file_path + (args.append ? " (append)" : ""));
+      result = writeFileUtf8(args.file_path, args.content, args.append);
+    }
 
     response = await client.responses.create({
       model: "gpt-5.2",
+      instructions,
       tools,
       previous_response_id: response.id,
       input: [{

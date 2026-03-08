@@ -1,0 +1,12 @@
+{
+  "name": "demo-ts-hello",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/hello.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

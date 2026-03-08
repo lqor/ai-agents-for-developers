@@ -1,30 +1,33 @@
 import "dotenv/config";
-import readline from "readline";
 import OpenAI from "openai";
+import readline from "readline";
 import { execSync } from "child_process";
 
 const client = new OpenAI();
-const readLine = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+
+const readLine = readline.createInterface({ 
+    input: process.stdin, 
+    output: process.stdout 
 });
 
 const tools = [
-  {
-    name: "do_bash",
-    description: "Execute bash commands on the server",
-    type: "function" as const,
-    strict: true,
-    parameters: {
-      type: "object",
-      properties: {
-        command: { type: "string" },
-      },
-      required: ["command"],
-      additionalProperties: false,
-    },
-  },
+    {
+        name: "do_bash",
+        description: "Execute a bash command and return the output",
+        type: "function" as const,
+        strict: true,
+        parameters: {
+            type: "object",
+            properties: {
+                command: { type: "string"}
+            },
+            required: ["command"],
+            additionalProperties: false
+        }
+    }
 ];
+
+// {"ls -la"}
 
 let previousResponseId: string | undefined;
 
@@ -36,42 +39,46 @@ function executeBash(command: string): string {
   return execSync(command, { encoding: "utf-8" }).toString();
 }
 
-while (true) {
-  const input = await ask("You: ");
-  if (input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
-    console.log("Exiting...");
-    break;
-  }
+while(true) {
+    const input = await ask("You: ");
 
-  let response = await client.responses.create({
-    model: "gpt-5.2",
-    input: input,
-    tools,
-    previous_response_id: previousResponseId,
-  });
-
-  while (true) {
-    const toolCall = response.output.find((item) => item.type === "function_call");
-    if (!toolCall) break;
-
-    const args = JSON.parse(toolCall.arguments);
-    console.log("⚡ Running: " + args.command);
-    const result = executeBash(args.command);
-
-    response = await client.responses.create({
-        model: "gpt-5.2",
-        tools,
-        previous_response_id: response.id,
-        input: [{
-        type: "function_call_output" as const,
-        call_id: toolCall.call_id,
-        output: result,
-        }],
-    });
+    if(input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
+        console.log("Exiting...");
+        break;
     }
 
-  console.log("AI: " + response.output_text);
-  previousResponseId = response.id;
+    let response = await client.responses.create({
+        model: "gpt-5.2",
+        input: input,
+        tools,
+        previous_response_id: previousResponseId,
+    });
+
+    while(true) {
+        const toolCall = response.output.find((item) => item.type === "function_call");
+
+        if(!toolCall) {
+            break;
+        }
+
+        const args = JSON.parse(toolCall.arguments);
+        console.log("Executing command: " + args.command);
+        const result = executeBash(args.command);
+        console.log(result);
+
+        response = await client.responses.create({
+            model: "gpt-5.2",
+            tools,
+            previous_response_id: response.id,
+            input: [{
+                type: "function_call_output" as const,
+                call_id: toolCall.call_id,
+                output: result,
+            }],
+        });
+    }
+
+    previousResponseId = response.id;
 }
 
 readLine.close();

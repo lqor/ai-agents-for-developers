@@ -1,6 +1,6 @@
 import "dotenv/config";
-import readline from "readline";
 import OpenAI from "openai";
+import readline from "readline";
 
 const client = new OpenAI();
 
@@ -18,7 +18,7 @@ function ask(prompt: string): Promise<string> {
 while(true) {
     const input = await ask("You: ");
 
-    if (input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
+    if(input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
         console.log("Exiting...");
         break;
     }

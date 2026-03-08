@@ -4,7 +4,7 @@
 
 We'll build an agent that can use bash and can evaluate your code base. It'll be the bare minimum, because we want to do it for the learning purpose.
 
-The whole thing is going to be <300 lines of code.
+The whole thing is going to be <100 lines of code.
 
 You'll see that Agent is a very simple concept.
 
