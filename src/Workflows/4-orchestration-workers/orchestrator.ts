@@ -35,7 +35,6 @@ Keep it to 1-2 short paragraphs. Return ONLY the content, no title.`,
   });
 });
 
-console.log();
 const results = await Promise.all(workers);
 const drafts = results.map((r, i) => ({
   title: sections[i],

@@ -3,7 +3,7 @@ const client = new OpenAI();
 
 const response = await client.responses.create({
   model: "gpt-5.2",
-  input: "ping",
+  input: "How's life?",
 });
 
-console.log(response.output_text);
+console.log(response);

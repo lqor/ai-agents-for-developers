@@ -1,0 +1,1 @@
+- Added `getCheapest` to return the `count` lowest-priced products.

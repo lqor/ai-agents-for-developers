@@ -10,7 +10,7 @@ const client = new OpenAI();
  */
 
 // Just simulating an incoming customer support message, can be anything.
-const customerMessage = "I was charged twice for my last order and I need a refund";
+const customerMessage = "I can't turn on my device after the latest update. It was working fine yesterday.";
 
 const classification = await client.responses.create({
   model: "gpt-5.2",

@@ -6,7 +6,7 @@ const client = new OpenAI();
 /**
  * Scenario: You are building a content moderation system for product reviews. You want to check if a review is safe to publish or if it should be blocked for containing hate speech, spam, or personal information. You decide to use a parallelized voting system, where you run multiple safety checks in parallel and then combine their results to make a final decision.
  */
-const userReview = "This product is very bad. The seller is a scammer from China, his email is john@scam.com. Don't buy this trash.";
+const userReview = "This product is very good. Don't buy this.";
 
 console.log(`=== Review ===\n"${userReview}"\n`);
 console.log("Running 3 safety checks in parallel...\n");
