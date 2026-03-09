@@ -18,16 +18,26 @@
     "sectioning": "cd src/Workflows/3-parallelization && npx tsx sectioning.ts",
     "voting": "cd src/Workflows/3-parallelization && npx tsx voting.ts",
     "orchestrator": "cd src/Workflows/4-orchestration-workers && npx tsx orchestrator.ts",
-    "evaluation": "cd src/Workflows/5-evaluation && npx tsx evaluation.ts"
+    "evaluation": "cd src/Workflows/5-evaluation && npx tsx evaluation.ts",
+    "open-ai-sdk-setup": "cd src/openai-sdk/1-setup && npx tsx setup.ts",
+    "open-ai-sdk-built-in-tools": "cd src/openai-sdk/2-tools && npx tsx built-in-tools.ts",
+    "open-ai-sdk-custom-tools": "cd src/openai-sdk/2-tools && npx tsx custom-tools.ts",
+    "open-ai-sdk-shell-tools": "cd src/openai-sdk/2-tools && npx tsx shell-tools.ts",
+    "agent-as-tool": "cd src/openai-sdk/3-patterns && npx tsx agent-as-tool.ts",
+    "handoff": "cd src/openai-sdk/3-patterns && npx tsx handoff.ts",
+    "hitl": "cd src/openai-sdk/3-patterns && npx tsx hitl.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.71",
+    "@openai/agents": "^0.6.0",
     "dotenv": "^17.3.1",
     "openai": "^6.25.0",
-    "tsx": "^4.21.0"
+    "tsx": "^4.21.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^25.3.3"
